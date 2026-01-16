@@ -75,7 +75,7 @@
   </div>
 
   <div>
-    <label>字串長度: <input type="number" id="length" value="100" min="1"></label>
+    <label>字串長度: <input type="number" id="length" value="100" min="1" max="50000"></label>
   </div>
 
   <button onclick="generate()">產生字串</button>
@@ -111,6 +111,20 @@
         return;
       }
 
+      if (length < 1) {
+        status.style.color = 'red';
+        status.textContent = '字串長度不能小於 1';
+        setTimeout(() => status.textContent = '', 2000);
+        document.getElementById('length').value = 1;
+        return;
+      }else if (length > 50000) {
+        status.style.color = 'red';
+        status.textContent = '字串長度不能超過 50000';
+        setTimeout(() => status.textContent = '', 2000);
+        document.getElementById('length').value = 50000;
+        return;
+      }
+
       let result = '';
       for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * chars.length);
@@ -134,7 +148,7 @@
       navigator.clipboard.writeText(text).then(() => {
         status.style.color = 'green';
         status.textContent = '已複製到剪貼簿！';
-        setTimeout(() => status.textContent = '', 1500);
+        setTimeout(() => status.textContent = '', 2000);
       });
     }
   </script>
