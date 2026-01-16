@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>隨機字串產生器</title>
+  <style>
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .options {
+      margin-bottom: 20px;
+    }
+    label {
+      margin-right: 15px;
+    }
+    input[type="number"] {
+      width: 60px;
+      margin-left: 10px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 15px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 400px;
+      margin-top: 20px;
+    }
+    #copy-status {
+      font-size: 14px;
+      color: green;
+      height: 18px;
+      margin-right: 10px;
+      flex: 1;
+      text-align: left;
+    }
+    #copy-btn {
+      font-size: 13px;
+      padding: 5px 10px;
+      margin: 0;
+    }
+    #result {
+      margin-top: 5px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <h1>隨機字串產生器</h1>
+
+  <div class="options">
+    <label><input type="checkbox" id="numbers" /> 數字</label>
+    <label><input type="checkbox" id="lowercase" checked> 英文小寫</label>
+    <label><input type="checkbox" id="uppercase" checked> 英文大寫</label>
+    <label><input type="checkbox" id="symbols"> 符號</label>
+  </div>
+
+  <div>
+    <label>字串長度: <input type="number" id="length" value="100" min="1"></label>
+  </div>
+
+  <button onclick="generate()">產生字串</button>
+
+  <!-- 新增：結果上方區塊 -->
+  <div class="result-header">
+    <div id="copy-status"></div>
+    <button id="copy-btn" onclick="copyResult()">複製文字</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    function generate() {
+      const length = parseInt(document.getElementById('length').value);
+      const useNumbers = document.getElementById('numbers').checked;
+      const useLowercase = document.getElementById('lowercase').checked;
+      const useUppercase = document.getElementById('uppercase').checked;
+      const useSymbols = document.getElementById('symbols').checked;
+
+      let chars = '';
+      if (useNumbers) chars += '0123456789';
+      if (useLowercase) chars += 'abcdefghijklmnopqrstuvwxyz';
+      if (useUppercase) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      if (useSymbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+      const status = document.getElementById('copy-status');
+      status.textContent = '';
+      if (!chars) {
+        status.style.color = 'red';
+        status.textContent = '請至少選擇一種字元類型！';
+        setTimeout(() => status.textContent = '', 2000);
+        return;
+      }
+
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * chars.length);
+        result += chars[randomIndex];
+      }
+
+      document.getElementById('result').textContent = result;
+    }
+
+    function copyResult() {
+      const text = document.getElementById('result').textContent;
+      const status = document.getElementById('copy-status');
+
+      if (!text) {
+        status.style.color = 'red';
+        status.textContent = '沒有可複製的文字！';
+        setTimeout(() => status.textContent = '', 2000);
+        return;
+      }
+
+      navigator.clipboard.writeText(text).then(() => {
+        status.style.color = 'green';
+        status.textContent = '已複製到剪貼簿！';
+        setTimeout(() => status.textContent = '', 1500);
+      });
+    }
+  </script>
+</body>
+</html>
